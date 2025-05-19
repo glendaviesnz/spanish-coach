@@ -34,7 +34,7 @@ From the spanish-coach directory:
 
 ```bash
 # Activate the Poetry environment
-poetry shell
+poetry env activate
 
 # Run the agent
 adk web

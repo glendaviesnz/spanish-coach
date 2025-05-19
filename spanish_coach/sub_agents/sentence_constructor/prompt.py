@@ -14,10 +14,11 @@ For each conjugation:
 - Create a simple sentence using only words from the top 1000 most common Spanish words provided at the end of this prompt
 - Ensure the sentence demonstrates the correct usage of the conjugation
 - Include simple subjects, objects, and modifiers as appropriate
-- Never include pronouns unless required for context, eg:
-   - 'hablo español', not 'yo hablo español'
-   - 'el habla español', not 'habla español'
-   - 'yo había comido', not 'había comido'
+- NEVER add pronouns unless required for context, eg:
+   - 'hablo español' NOT 'yo hablo español'
+   - 'Él habla español' NOT 'habla español'
+   - 'Yo había comido' NOT 'había comido'
+- If pronouns have been included and are not required for context you must remove them.
 - Keep sentences short (5-10 words) but natural and useful for learning
 - For the past participle create sentences for each of he, ha, has, han, and hemos and only include a pronoun for ha.
 
@@ -33,11 +34,11 @@ Return the sentences in a structured JSON format matching the input conjugation 
   "verb": "hablar",
   "sentences": {
     "present": {
-      "yo": "Yo hablo con mi amigo todos los días.",
-      "tu": "Tú hablas muy rápido.",
+      "yo": "Hablo con mi amigo todos los días.",
+      "tu": "Hablas muy rápido.",
       "el/ella/usted": "Ella habla español muy bien.",
-      "nosotros": "Nosotros hablamos sobre el tiempo.",
-      "ellos/ellas": "Ellos hablan por teléfono."
+      "nosotros": "Hablamos sobre el tiempo.",
+      "ellos/ellas": "Hablan por teléfono."
     },
     "preterite": {
       ...
