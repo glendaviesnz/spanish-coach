@@ -16,11 +16,33 @@
 
 from google.adk import Agent
 from google.adk.planners import BuiltInPlanner
-from google.genai import types
+from google.genai import types as genai_types
+from pydantic import BaseModel, Field
+from typing import Dict
 
 from spanish_coach.sub_agents.conjugator.prompt import CONJUGATOR_PROMPT
 
 MODEL = "gemini-2.5-flash-preview-04-17"
+
+# Pydantic Models for output_schema
+class PronounConjugations(BaseModel):
+    yo: str
+    tu: str
+    el_ella_usted: str = Field(alias="el/ella/usted")
+    nosotros: str
+    ellos_ellas: str = Field(alias="ellos/ellas")
+
+class PastParticipleConjugation(BaseModel):
+    default: str
+
+class ConjugationOutput(BaseModel):
+    verb: str
+    present: PronounConjugations
+    preterite: PronounConjugations
+    imperfect: PronounConjugations
+    conditional: PronounConjugations
+    future: PronounConjugations
+    past_participle: PastParticipleConjugation
 
 conjugator_agent = Agent(
     model=MODEL,
@@ -28,9 +50,13 @@ conjugator_agent = Agent(
     description="A specialized agent for Spanish verb conjugations",
     instruction=CONJUGATOR_PROMPT,
     output_key="verb_conjugations",
+    output_schema=ConjugationOutput,
     planner=BuiltInPlanner(
-        thinking_config=types.ThinkingConfig(
-            include_thoughts=True,
+        thinking_config=genai_types.ThinkingConfig(
+            include_thoughts=False,
         ),
+    ),
+    generate_content_config=genai_types.GenerateContentConfig(
+        response_mime_type="application/json"
     )
 ) 

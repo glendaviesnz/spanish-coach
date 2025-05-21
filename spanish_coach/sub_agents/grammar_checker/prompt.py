@@ -42,12 +42,34 @@ For any errors found:
 - Ensure both languages use appropriate tone and register
 
 STEP 5: COMPILE FINAL RESPONSE
-Only ever return a simple comma separted list of the corrected sentences with no extra details or commentary, eg.
-
+Only ever return a simple comma separted list of the corrected sentences, eg.
 Hablo con mi amigo todos los días., I talk to my friend every day.
 Hablas muy rápido., You talk very fast.
 Ella habla español muy bien., She speaks Spanish very well.
 
+Return the corrected sentences in a structured JSON format maintaining the original structure:
+{
+  "verb": "hablar",
+  "sentences": {
+    "present": {
+      "yo": {
+        "spanish": "Hablo con mi amigo todos los días.",
+        "english": "I talk with my friend every day."
+      },
+      "tu": {
+        "spanish": "Hablas muy rápido.",
+        "english": "You speak very fast."
+      },
+      "el/ella/usted": {
+        "spanish": "Ella habla español muy bien.",
+        "english": "She speaks Spanish very well."
+      },
+    },
+    "preterite": {
+      ...
+    }
+  }
+}
 
 Focus on ensuring both grammatical correctness and natural language use for language learners.
 """ 

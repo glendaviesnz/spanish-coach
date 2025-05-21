@@ -50,17 +50,51 @@ STEP 3: VERIFY ACCURACY
 
 STEP 4: COMPILE FINAL RESPONSE
 
-Return the conjugations in a structured json format with the following keys:
+Your response MUST be a single, valid JSON object and NOTHING ELSE.
+Do NOT include any introductory text, conversational phrases, apologies, or concluding remarks.
+Do NOT wrap the JSON in markdown ```json ... ``` tags.
+Output ONLY the raw JSON.
+
+The JSON object must strictly follow this structure, including all specified tenses and pronouns:
 {
-    "verb": "hablar",
+    "verb": "<identified_verb>",
     "present": {
-        "yo": "hablo,
-        "tu": "hablas",
-        "el/ella/usted": "habla",
-        "nosotros": "hablamos",
-        "ellos/ellas": "hablan"
-        }
+        "yo": "<conjugation>",
+        "tu": "<conjugation>",
+        "el/ella/usted": "<conjugation>",
+        "nosotros": "<conjugation>",
+        "ellos/ellas": "<conjugation>"
     },
-    "preterite": ... etc.
+    "preterite": {
+        "yo": "<conjugation>",
+        "tu": "<conjugation>",
+        "el/ella/usted": "<conjugation>",
+        "nosotros": "<conjugation>",
+        "ellos/ellas": "<conjugation>"
+    },
+    "imperfect": {
+        "yo": "<conjugation>",
+        "tu": "<conjugation>",
+        "el/ella/usted": "<conjugation>",
+        "nosotros": "<conjugation>",
+        "ellos/ellas": "<conjugation>"
+    },
+    "conditional": {
+        "yo": "<conjugation>",
+        "tu": "<conjugation>",
+        "el/ella/usted": "<conjugation>",
+        "nosotros": "<conjugation>",
+        "ellos/ellas": "<conjugation>"
+    },
+    "future": {
+        "yo": "<conjugation>",
+        "tu": "<conjugation>",
+        "el/ella/usted": "<conjugation>",
+        "nosotros": "<conjugation>",
+        "ellos/ellas": "<conjugation>"
+    },
+    "past_participle": {
+        "default": "<conjugation>" // For past participle, usually a single form
+    }
 }
 """
