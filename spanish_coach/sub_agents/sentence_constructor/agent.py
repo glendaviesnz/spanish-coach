@@ -20,6 +20,8 @@ from pathlib import Path
 from google.adk import Agent
 from google.adk.planners import BuiltInPlanner
 from google.genai import types
+from pydantic import BaseModel, Field
+from typing import List
 
 # Import necessary classes for the callback
 from google.adk.agents.callback_context import CallbackContext
@@ -28,6 +30,17 @@ from google.adk.models.llm_request import LlmRequest
 from spanish_coach.sub_agents.sentence_constructor.prompt import SENTENCE_CONSTRUCTOR_PROMPT
 
 MODEL = "gemini-2.5-flash-preview-04-17"
+
+# Pydantic Models for output_schema
+class ExampleSentence(BaseModel):
+    spanish: str = Field(description="The Spanish sentence")
+    english: str = Field(description="The English translation")
+    conjugated_verb: str = Field(description="The main conjugated verb used in the sentence")
+    verb_form: str = Field(description="The form of the verb (e.g., 'yo present', 'él preterite')")
+
+class SentenceConstructorOutput(BaseModel):
+    sentences: List[ExampleSentence] = Field(description="List of example sentences with translations")
+    total_count: int = Field(description="Total number of sentences generated")
 
 # Load the top 1000 Spanish words
 current_dir = Path(__file__).parent
@@ -71,10 +84,14 @@ sentence_constructor_agent = Agent(
     description="A specialized agent for creating simple Spanish sentences using conjugated verbs",
     instruction=instruction,
     output_key="example_sentences",
+    output_schema=SentenceConstructorOutput,
     before_model_callback=append_conjugations_to_prompt,
     planner=BuiltInPlanner(
         thinking_config=types.ThinkingConfig(
-            include_thoughts=True,
+            include_thoughts=False,
         ),
+    ),
+    generate_content_config=types.GenerateContentConfig(
+        response_mime_type="application/json"
     )
 ) 

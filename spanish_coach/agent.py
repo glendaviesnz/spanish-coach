@@ -53,7 +53,7 @@ spanish_coach_workflow = SequentialAgent(
     sub_agents=[
         conjugator_agent,  # First step: conjugate verbs
         sentence_constructor_agent,  # Second step: construct sentences
-        grammar_checker_agent  # Final step: check grammar
+        grammar_checker_agent,  # Final step: check grammar and generate CSV
     ]
 )
 
