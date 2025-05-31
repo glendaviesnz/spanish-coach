@@ -17,6 +17,7 @@
 import os
 from dotenv import load_dotenv
 from google.adk import Agent
+from google.adk.agents import SequentialAgent
 from google.adk.tools.agent_tool import AgentTool
 
 from . import prompt
@@ -32,6 +33,7 @@ os.environ["GOOGLE_API_KEY"] = os.getenv("GOOGLE_API_KEY", "")
 
 MODEL = "gemini-2.5-flash-preview-04-17"
 
+# Original tool-based agent implementation (kept for reference)
 spanish_coach = Agent(
     model=MODEL,
     name="spanish_coach",
@@ -44,4 +46,16 @@ spanish_coach = Agent(
     ],
 )
 
-root_agent = spanish_coach 
+# New workflow-based sequential agent
+spanish_coach_workflow = SequentialAgent(
+    name="spanish_coach_workflow",
+    description="A sequential workflow for Spanish language learning",
+    sub_agents=[
+        conjugator_agent,  # First step: conjugate verbs
+        sentence_constructor_agent,  # Second step: construct sentences
+        grammar_checker_agent  # Final step: check grammar
+    ]
+)
+
+# Use the workflow agent as the root agent
+root_agent = spanish_coach_workflow 
