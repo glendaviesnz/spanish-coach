@@ -43,6 +43,7 @@ class ConjugationOutput(BaseModel):
     conditional: PronounConjugations
     future: PronounConjugations
     past_participle: PastParticipleConjugation
+    present_subjunctive: PronounConjugations
 
 conjugator_agent = Agent(
     model=MODEL,

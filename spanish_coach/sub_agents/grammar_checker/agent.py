@@ -44,6 +44,7 @@ class GrammarCheckerOutput(BaseModel):
     corrected_sentences: List[CorrectedSentence] = Field(description="List of corrected sentences with explanations")
     total_corrections: int = Field(description="Total number of corrections made")
     summary: Optional[str] = Field(description="Summary of common issues found")
+    csv_output: Optional[str] = Field(description="CSV formatted output of corrected sentences (corrected_spanish,corrected_english)")
 
 # Define the callback function
 def append_sentences_to_prompt(
@@ -68,11 +69,10 @@ def append_sentences_to_prompt(
 
 def convert_to_csv_callback(
     callback_context: CallbackContext, llm_response: LlmResponse, **kwargs
-) -> None:
+) -> Optional[LlmResponse]:
     """
     After the grammar checker completes, convert its output to CSV format.
-    Get the data from the LLM response since state isn't updated yet.
-    IMPORTANT: Don't return anything to avoid overriding the normal response.
+    Get the data from the LLM response, add CSV field, and return modified response.
     """
     print(f"GrammarChecker: convert_to_csv_callback called")
     
@@ -90,15 +90,33 @@ def convert_to_csv_callback(
             csv_output = convert_corrected_sentences_to_csv(response_data)
             
             if csv_output:
-                # Store CSV in state
+                # Add CSV to the response data
+                response_data["csv_output"] = csv_output
+                
+                # Store CSV in state as well
                 callback_context.state["csv_output"] = csv_output
-                print(f"GrammarChecker: Added CSV output to state ({len(csv_output)} characters)")
-                print(f"GrammarChecker: CSV preview: {csv_output[:200]}...")
+                print(f"GrammarChecker: Added CSV output to response and state ({len(csv_output)} characters)")
                 
                 # Print the full CSV to console so you can see it
                 print("=== FULL CSV OUTPUT ===")
                 print(csv_output)
                 print("=== END CSV OUTPUT ===")
+                
+                # Create new response with modified JSON
+                from google.genai import types
+                modified_json = json.dumps(response_data, ensure_ascii=False, indent=2)
+                
+                new_content = types.Content(
+                    parts=[types.Part(text=modified_json)],
+                    role="model"
+                )
+                
+                # Return new response with CSV included
+                return LlmResponse(
+                    content=new_content,
+                    usage=llm_response.usage,
+                    raw_response=llm_response.raw_response
+                )
             else:
                 print("GrammarChecker: CSV output was empty")
                 
@@ -109,7 +127,8 @@ def convert_to_csv_callback(
     else:
         print("GrammarChecker: No response content found")
     
-    # Don't return anything - this avoids overriding the normal JSON response
+    # Return None to use original response if anything goes wrong
+    return None
 
 grammar_checker_agent = Agent(
     model=MODEL,

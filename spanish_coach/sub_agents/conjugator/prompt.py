@@ -33,6 +33,7 @@ For the identified verb, generate conjugations for ALL of the following tenses:
 * conditional
 * future 
 * past participle
+* present subjunctive
 
 Include ALL of the following pronoun conjugations for each tense:
 * yo
@@ -95,6 +96,13 @@ The JSON object must strictly follow this structure, including all specified ten
     },
     "past_participle": {
         "default": "<conjugation>" // For past participle, usually a single form
+    },
+    "present subjunctive": {
+        "yo": "<conjugation>",
+        "tu": "<conjugation>",
+        "el/ella/usted": "<conjugation>",
+        "nosotros": "<conjugation>",
+        "ellos/ellas": "<conjugation>"
     }
 }
 """
